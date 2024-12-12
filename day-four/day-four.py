@@ -12,8 +12,6 @@ def matrix_builder(input):
             if char != '\n':
                 items.append(char)
         matrix.append(items)
-    # for row in matrix:
-    #     print(row)
     return matrix
 
 
@@ -49,13 +47,43 @@ def xmas_count(matrix):
     return xmas_counter
 
 
+def descend_mas(matrix, x, y):
+    set = {'M', 'S'}
+    set.discard(matrix[x-1][y-1])
+    set.discard(matrix[x+1][y+1])
+    return len(set) == 0
+
+
+def ascend_mas(matrix, x, y):
+    set = {'M', 'S'}
+    set.discard(matrix[x-1][y+1])
+    set.discard(matrix[x+1][y-1])
+    return len(set) == 0
+
+
+def part2(input):
+    matrix = matrix_builder(input)
+    xmas_count = 0
+
+    for i in range(1, len(matrix)-1):
+        for j in range(1, len(matrix[i])-1):
+            if matrix[i][j] == 'A':
+                xmas_count += (ascend_mas(matrix, i, j)
+                               and descend_mas(matrix, i, j))
+
+    return xmas_count
+
+
 def part1(input):
     matrix = matrix_builder(input)
     return xmas_count(matrix)
 
 
-print(part1(example_rows))
-print(part1(input_rows))
+# print(part1(example_rows))
+# print(part1(input_rows))
+
+print(part2(example_rows))
+print(part2(input_rows))
 
 example_rows.close()
 input_rows.close()
