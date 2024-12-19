@@ -42,9 +42,33 @@ def antenna_placer(x1, y1, x2, y2, max_row, max_col, antenna_set):
         antenna_set.add(f"{x2},{y2}")
 
 
-def part1(input):
+def resonant_antenna_placer(x1, y1, x2, y2, max_row, max_col, resonant_antenna_set):
+    resonant_antenna_set.add(f"{x1},{y1}")
+
+    x_diff = x2 - x1
+    y_diff = y2 - y1
+
+    new_x = x1 + x_diff
+    new_y = y1 + y_diff
+
+    while 0 <= new_x < max_col and 0 <= new_y < max_row:
+        resonant_antenna_set.add(f"{new_x},{new_y}")
+        new_x = new_x + x_diff
+        new_y = new_y + y_diff
+
+    new_x = x1 - x_diff
+    new_y = y1 - y_diff
+
+    while 0 <= new_x < max_col and 0 <= new_y < max_row:
+        resonant_antenna_set.add(f"{new_x},{new_y}")
+        new_x = new_x - x_diff
+        new_y = new_y - y_diff
+
+
+def antennas(input):
     input_matrix = matrix_builder(input)
     antenna_set = set()
+    resonant_antenna_set = set()
 
     position_dictionary = {}
 
@@ -65,9 +89,11 @@ def part1(input):
                 y2 = value[l][0]
                 antenna_placer(x1, y1, x2, y2, len(input_matrix),
                                len(input_matrix[0]), antenna_set)
+                resonant_antenna_placer(x1, y1, x2, y2, len(input_matrix),
+                                        len(input_matrix[0]), resonant_antenna_set)
 
-    return len(antenna_set)
+    return [len(antenna_set), len(resonant_antenna_set)]
 
 
-print(part1(example_rows))
-print(part1(input_rows))
+print(antennas(example_rows))
+print(antennas(input_rows))
