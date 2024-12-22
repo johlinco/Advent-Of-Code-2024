@@ -22,5 +22,4 @@ def stone_counter(stone, steps):
 
 
 print(input_stones)
-print(sum(stone_counter(stone, 75)) for stone in input_stones)
-print(cache())
+print(sum(stone_counter(stone, 75) for stone in input_stones))
