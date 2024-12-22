@@ -1,37 +1,26 @@
+from functools import cache
+
 example_array = open("example.txt").read().split()
 input_array = open("input.txt").read().split()
 
-
-def stone_parser(array):
-    result = []
-
-    for stone in array:
-        stone_int = int(stone)
-        if stone_int == 0:
-            result.append("1")
-        elif len(stone) % 2 == 0:
-            midpoint = len(stone) // 2
-            result.append(stone[:midpoint])
-            if int(stone[midpoint:]) == 0:
-                result.append("0")
-            else:
-                back_half = stone[midpoint:]
-                while back_half[0] == "0":
-                    back_half = back_half[1:]
-                result.append(back_half)
-        else:
-            result.append(str(stone_int * 2024))
-
-    return result
+example_stones = [int(x) for x in example_array]
+input_stones = [int(x) for x in input_array]
 
 
-def stone_looper(loops, array):
+@cache
+def stone_counter(stone, steps):
+    if steps == 0:
+        return 1
+    if stone == 0:
+        return stone_counter(1, steps - 1)
+    string = str(stone)
+    length = len(string)
+    midpoint = length // 2
+    if length % 2 == 0:
+        return stone_counter(int(string[:midpoint]), steps - 1) + stone_counter(int(string[midpoint:]), steps - 1)
+    return stone_counter(stone * 2024, steps - 1)
 
-    for i in range(0, loops):
-        array = stone_parser(array)
 
-    return len(array)
-
-
-print(stone_looper(25, example_array))
-print(stone_looper(25, input_array))
+print(input_stones)
+print(sum(stone_counter(stone, 75)) for stone in input_stones)
+print(cache())
